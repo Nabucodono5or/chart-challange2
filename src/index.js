@@ -1,3 +1,6 @@
 import { select } from "d3-selection";
+import { csv } from "d3-fetch";
 
-select("body").append("h1").html("Hello World");
+csv(require("../data/netflix_titles.csv")).then((data) => {
+  console.log(data);
+});
