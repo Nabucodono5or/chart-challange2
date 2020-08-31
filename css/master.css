@@ -50,29 +50,43 @@ block3 : #2ec4b6
   justify-content: space-between;
 }
 
-.number-container {
+.number-container,
+.numbers {
+  border-radius: 0.3rem;
   width: 200px;
-  border: #495057 solid 1px;
+  background-color: var(--card-color);
+  box-shadow: 0 17.7px 33.9px -52px rgba(0, 0, 0, 0.137),
+    0 21.6px 41.6px -52px rgba(0, 0, 0, 0.203),
+    0 24.9px 49.1px -52px rgba(0, 0, 0, 0.257),
+    0 40px 80px -52px rgba(0, 0, 0, 0.31);
 }
 
 .icon-container {
+  background-color: var(--block-color-dois);
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-  border: #495057 solid 1px;
+  /* border: #495057 solid 1px; */
   width: 70px;
   height: 70px;
   margin: -1rem 1rem;
+  border-radius: 3em;
 }
 
-.icon-container i{
-    color: #2ec4b6;
-    font-size: 2rem;
+.icon-container i {
+  background-color: var(--block-color-dois);
+  color: var(--card-color);
+  font-size: 2rem;
 }
 
 .numbers {
   margin-top: 1.6rem;
   padding: 0.5rem 1rem;
   text-align: right;
+}
+
+.numbers span,
+.numbers h2 {
+  background-color: var(--card-color);
 }
