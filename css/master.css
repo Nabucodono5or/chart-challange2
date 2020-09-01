@@ -90,3 +90,54 @@ block3 : #2ec4b6
 .numbers h2 {
   background-color: var(--card-color);
 }
+
+.numbers span {
+  color: var(--sub-title-color);
+}
+
+.numbers h2 {
+  padding: 0.5rem 0rem;
+  color: var(--title-color);
+}
+
+.charts-containers {
+  margin: 2rem 0rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart-container {
+  border-radius: 0.3rem;
+  width: 300px;
+  height: 300px;
+  background-color: var(--card-color);
+  box-shadow: 0 17.7px 33.9px -52px rgba(0, 0, 0, 0.137),
+    0 21.6px 41.6px -52px rgba(0, 0, 0, 0.203),
+    0 24.9px 49.1px -52px rgba(0, 0, 0, 0.257),
+    0 40px 80px -52px rgba(0, 0, 0, 0.31);
+}
+
+.chart-block {
+  position: relative;
+  margin: -1rem 1rem;
+}
+
+.chart-container h3,
+.chart-container .body p,
+.chart-container .footer p {
+  background-color: var(--card-color);
+}
+
+.chart-container .title {
+  font-weight: 500;
+  color: var(--title-color);
+}
+
+.chart-container .body,
+.chart-container .footer {
+  color: var(--sub-title-color);
+}
+
+.chart-container .footer {
+  font-size: 0.8rem;
+}
