@@ -48,6 +48,8 @@ block3 : #2ec4b6
   margin: 2rem 0rem;
   display: flex;
   justify-content: space-between;
+  flex-flow: wrap;
+  align-content: space-between;
 }
 
 .number-container,
@@ -101,6 +103,7 @@ block3 : #2ec4b6
 }
 
 .charts-containers {
+  flex-flow: wrap;
   margin: 2rem 0rem;
   display: flex;
   justify-content: space-between;
@@ -118,17 +121,30 @@ block3 : #2ec4b6
 }
 
 .chart-block {
+  display: table;
   position: relative;
-  margin: -1rem 1rem;
+  margin: -1.5rem auto;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4.5px 3.6px rgba(0, 0, 0, 0.024),
+    0 12.5px 10px rgba(0, 0, 0, 0.035), 0 30.1px 24.1px rgba(0, 0, 0, 0.046),
+    0 100px 80px rgba(0, 0, 0, 0.07);
+}
+
+.chart-block,
+svg {
+  background-color: var(--block-color-dois);
 }
 
 .chart-container h3,
 .chart-container .body p,
 .chart-container .footer p {
+  padding: 0.4rem 1.4rem;
   background-color: var(--card-color);
 }
 
 .chart-container .title {
+  margin-top: 1.5rem;
   font-weight: 500;
   color: var(--title-color);
 }
@@ -140,4 +156,14 @@ block3 : #2ec4b6
 
 .chart-container .footer {
   font-size: 0.8rem;
+}
+
+@media (max-width: 1000px) {
+  .number-container {
+    margin-top: 2.5rem;
+  }
+
+  .chart-container {
+    margin-top: 4rem;
+  }
 }
