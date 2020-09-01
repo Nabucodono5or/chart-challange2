@@ -64,7 +64,6 @@ block3 : #2ec4b6
 }
 
 .icon-container {
-  background-color: var(--block-color-dois);
   position: relative;
   display: flex;
   justify-content: center;
@@ -76,8 +75,22 @@ block3 : #2ec4b6
   border-radius: 3em;
 }
 
-.icon-container i {
+.icon1,
+.icon1 i {
+  background-color: var(--block-color-um);
+}
+
+.icon3,
+.icon3 i {
   background-color: var(--block-color-dois);
+}
+
+.icon2,
+.icon2 i {
+  background-color: var(--block-color-tres);
+}
+
+.icon-container i {
   color: var(--card-color);
   font-size: 2rem;
 }
@@ -99,6 +112,7 @@ block3 : #2ec4b6
 
 .numbers h2 {
   padding: 0.5rem 0rem;
+  font-weight: 500;
   color: var(--title-color);
 }
 
@@ -112,7 +126,7 @@ block3 : #2ec4b6
 .chart-container {
   border-radius: 0.3rem;
   width: 300px;
-  height: 300px;
+  /* height: 380px; */
   background-color: var(--card-color);
   box-shadow: 0 17.7px 33.9px -52px rgba(0, 0, 0, 0.137),
     0 21.6px 41.6px -52px rgba(0, 0, 0, 0.203),
@@ -131,22 +145,46 @@ block3 : #2ec4b6
     0 100px 80px rgba(0, 0, 0, 0.07);
 }
 
-.chart-block,
-svg {
+.block1,
+.block1 svg {
+  background-color: var(--block-color-um);
+}
+
+.block2,
+.block2 svg {
   background-color: var(--block-color-dois);
 }
 
+.block3,
+.block3 svg {
+  background-color: var(--block-color-tres);
+}
+
+.chart-container .footer,
 .chart-container h3,
 .chart-container .body p,
-.chart-container .footer p {
-  padding: 0.4rem 1.4rem;
+.chart-container .footer p,
+.chart-container .footer i {
+  padding: 0.4rem 1rem;
   background-color: var(--card-color);
 }
 
+.chart-container .footer p {
+  padding-left: 0rem;
+}
+
+.chart-container .footer i {
+  padding-right: 0.5rem;
+  padding-left: 0rem;
+}
+
 .chart-container .title {
-  margin-top: 1.5rem;
-  font-weight: 500;
+  margin-top: 2.8rem;
   color: var(--title-color);
+}
+
+.chart-container .title h3 {
+  font-weight: 500;
 }
 
 .chart-container .body,
@@ -155,7 +193,18 @@ svg {
 }
 
 .chart-container .footer {
+  display: flex;
   font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
+hr {
+  margin: 1rem 1rem;
+  background-color: var(--card-color);
+  color: var(--sub-title-color);
+  border-width: 0.1rem;
+  opacity: 0.3;
+  height: 0.01rem;
 }
 
 @media (max-width: 1000px) {
