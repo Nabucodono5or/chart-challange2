@@ -1,7 +1,8 @@
 import { select, selectAll } from "d3-selection";
 import { csv } from "d3-fetch";
-import iconSvg from "../resources/error.svg";
+import { histogram, extent } from "d3-array";
 import { scaleBand, scaleLinear, max, axisBottom, axisLeft } from "d3";
+import { line } from "d3-shape";
 
 // selectAll(".icon-container").append("svg").attr("width", 50).attr("height", 60);
 let width = 240;
@@ -43,18 +44,25 @@ selectAll(".chart-block")
 csv(require("../data/netflix_titles.csv")).then((data) => {
   let block1 = select(".block1").select("svg");
   let block2 = select(".block2").select("svg");
-
+  let block3 = select(".block3").select("svg");
   let ratings = mesuareRatings(highlightRatings, data);
-  renderMesuare(ratings);
-
   let countries = mesuareCountry(countriesHighlight, data);
-  console.log(countries);
 
+  renderMesuare(ratings);
   ratings = mesuareRatings(allRatings, data);
-  lineChart(block1, ratings);
 
-  barChart(block2, countries);
+  lineChart(block1, ratings);
+  lineChart2(block3, countries);
+  histoChart(block2, data);
 });
+
+function mesuareYearsRelease(incomingData) {
+  let frequencyOfYearsRelease = incomingData.map((d) => {
+    d.release_year = +d.release_year;
+  });
+
+  return frequencyOfYearsRelease;
+}
 
 function mesuareRatings(ratings, incomingData) {
   ratings.forEach((r) => {
@@ -66,6 +74,18 @@ function mesuareRatings(ratings, incomingData) {
   });
 
   return ratings;
+}
+
+function mesuareCountry(countries, incomingData) {
+  countries.forEach((c) => {
+    incomingData.forEach((d) => {
+      if (c.name == d.country) {
+        c.total += 1;
+      }
+    });
+  });
+
+  return countries;
 }
 
 function renderMesuare(incomingData) {
@@ -101,6 +121,8 @@ function lineChart(svg, incomingData) {
   let xAxis = axisBottom(xScale).tickSize(-inneHeight).tickPadding(9);
   let yAxis = axisLeft(yScale).tickSize(0).tickPadding(10);
 
+  let lineGenarator = line().x(xValue).y(yValue);
+
   let gGroup = svg
     .append("g")
     .attr("class", "gGroup")
@@ -132,21 +154,14 @@ function lineChart(svg, incomingData) {
     .attr("r", 4)
     .attr("cx", xValue)
     .attr("cy", yValue);
+
+  gGroup
+    .append("path")
+    .attr("class", "line-ratings")
+    .attr("d", lineGenarator(incomingData));
 }
 
-function mesuareCountry(countries, incomingData) {
-  countries.forEach((c) => {
-    incomingData.forEach((d) => {
-      if (c.name == d.country) {
-        c.total += 1;
-      }
-    });
-  });
-
-  return countries;
-}
-
-function barChart(svg, incomingData) {
+function lineChart2(svg, incomingData) {
   const innerWidth = width - margin.left - margin.right;
   const inneHeight = height - margin.top - margin.bottom;
   let siglas = incomingData.map((d) => d.sigla);
@@ -157,10 +172,7 @@ function barChart(svg, incomingData) {
   let xScale = scaleBand()
     .domain(siglas)
     .range([0, innerWidth])
-    .paddingInner(0.05);
-
-  console.log(xScale.bandwidth());
-  // console.log(yScale())
+    .paddingInner(1);
 
   let yScale = scaleLinear()
     .domain([0, max(incomingData, (d) => d.total + 1000)])
@@ -169,6 +181,8 @@ function barChart(svg, incomingData) {
 
   let xAxis = axisBottom(xScale).tickSize(-inneHeight).tickPadding(9);
   let yAxis = axisLeft(yScale).tickSize(-innerWidth).ticks(6).tickPadding(10);
+
+  let lineGenarator = line().x(xValue).y(yValue);
 
   let gGroup = svg
     .append("g")
@@ -188,13 +202,74 @@ function barChart(svg, incomingData) {
     .call(yAxis);
 
   gGroup
-    .selectAll("rect")
+    .selectAll("circle")
     .data(incomingData)
     .enter()
+    .append("circle")
+    .attr("r", 4)
+    .attr("cx", xValue)
+    .attr("cy", yValue);
+
+  gGroup
+    .append("path")
+    .attr("class", "line-ratings")
+    .attr("d", lineGenarator(incomingData));
+}
+
+function histoChart(svg, incomingData) {
+  const innerWidth = width - margin.left - margin.right;
+  const innerHeight = height - margin.top - margin.bottom;
+
+  let xValue = (d) => xScale(d.release_year);
+  let xPosition = (d) => xScale(d.x0);
+  let yValue = (d) => yScale(d.length);
+
+  let xScale = scaleLinear()
+    .domain(extent(incomingData, (d) => d.release_year))
+    .range([0, innerWidth]);
+
+  let h = histogram().value((d) => {
+    return d.release_year;
+  });
+
+  let bins = h(incomingData);
+  let maxBin = max(bins, (d) => d.length);
+
+  let yScale = scaleLinear()
+    .domain([maxBin + 500, 2000, 500, 0])
+    .range([0, 50, 100, innerHeight]);
+
+  console.log(yScale.range());
+
+  let xAxis = axisBottom(xScale).ticks(5).tickSize(-innerHeight).tickPadding(9);
+  let yAxis = axisLeft(yScale).tickValues([maxBin, 2000, 1000, 300, 0]);
+
+  let gGroup = svg
+    .append("g")
+    .attr("class", "gGroup")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+  let xAxisG = gGroup
+    .append("g")
+    .attr("class", "xAxis")
+    .attr("transform", `translate(${0}, ${innerHeight})`)
+    .call(xAxis);
+
+  let yAxisG = gGroup
+    .append("g")
+    .attr("class", "yAxis")
+    .attr("transform", `translate(${0}, 0)`)
+    .call(yAxis);
+
+  gGroup
+    .selectAll("rect")
+    .data(bins)
+    .enter()
     .append("rect")
+    .attr("class", "bar-graph")
+    .attr("x", xPosition)
     .attr("y", yValue)
-    .attr("x", xValue)
-    .attr("width", xScale.bandwidth())
-    .attr("height", (d) => inneHeight - yScale(d.total))
-    .attr("transform", `translate(${0}, ${0})`);
+    .attr("width", 10)
+    .attr("height", (d) => innerHeight - yScale(d.length));
+  // .attr("height", (d) => innerHeight - yScale(d.length));
 }

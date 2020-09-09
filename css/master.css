@@ -207,6 +207,12 @@ hr {
   height: 0.01rem;
 }
 
+.line-ratings {
+  stroke-width: 1px;
+  stroke: #fff;
+  fill: none;
+}
+
 @media (max-width: 1000px) {
   .number-container {
     margin-top: 2.5rem;
