@@ -24,6 +24,15 @@ const allRatings = [
   { rating: "TV-MA", total: 0 },
 ];
 
+const countriesHighlight = [
+  { name: "United States", sigla: "USA", total: 0 },
+  { name: "Italy", sigla: "ITA", total: 0 },
+  { name: "Japan", sigla: "JPN", total: 0 },
+  { name: "Australia", sigla: "AUS", total: 0 },
+  { name: "Canada", sigla: "CAN", total: 0 },
+  { name: "Brazil", sigla: "BRA", total: 0 },
+];
+
 const margin = { top: 30, left: 40, right: 30, bottom: 30 };
 
 selectAll(".chart-block")
@@ -33,13 +42,18 @@ selectAll(".chart-block")
 
 csv(require("../data/netflix_titles.csv")).then((data) => {
   let block1 = select(".block1").select("svg");
+  let block2 = select(".block2").select("svg");
 
   let ratings = mesuareRatings(highlightRatings, data);
   renderMesuare(ratings);
 
+  let countries = mesuareCountry(countriesHighlight, data);
+  console.log(countries);
+
   ratings = mesuareRatings(allRatings, data);
-  console.log(ratings);
   lineChart(block1, ratings);
+
+  barChart(block2, countries);
 });
 
 function mesuareRatings(ratings, incomingData) {
@@ -118,4 +132,69 @@ function lineChart(svg, incomingData) {
     .attr("r", 4)
     .attr("cx", xValue)
     .attr("cy", yValue);
+}
+
+function mesuareCountry(countries, incomingData) {
+  countries.forEach((c) => {
+    incomingData.forEach((d) => {
+      if (c.name == d.country) {
+        c.total += 1;
+      }
+    });
+  });
+
+  return countries;
+}
+
+function barChart(svg, incomingData) {
+  const innerWidth = width - margin.left - margin.right;
+  const inneHeight = height - margin.top - margin.bottom;
+  let siglas = incomingData.map((d) => d.sigla);
+
+  let xValue = (d) => xScale(d.sigla);
+  let yValue = (d) => yScale(d.total);
+
+  let xScale = scaleBand()
+    .domain(siglas)
+    .range([0, innerWidth])
+    .paddingInner(0.05);
+
+  console.log(xScale.bandwidth());
+  // console.log(yScale())
+
+  let yScale = scaleLinear()
+    .domain([0, max(incomingData, (d) => d.total + 1000)])
+    .range([inneHeight, 0])
+    .nice();
+
+  let xAxis = axisBottom(xScale).tickSize(-inneHeight).tickPadding(9);
+  let yAxis = axisLeft(yScale).tickSize(-innerWidth).ticks(6).tickPadding(10);
+
+  let gGroup = svg
+    .append("g")
+    .attr("class", "gGroup")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+  let xAxisG = gGroup
+    .append("g")
+    .attr("class", "xAxis")
+    .attr("transform", `translate(${0}, ${inneHeight})`)
+    .call(xAxis);
+
+  let yAxisG = gGroup
+    .append("g")
+    .attr("class", "yAxis")
+    .attr("transform", `translate(${0}, 0)`)
+    .call(yAxis);
+
+  gGroup
+    .selectAll("rect")
+    .data(incomingData)
+    .enter()
+    .append("rect")
+    .attr("y", yValue)
+    .attr("x", xValue)
+    .attr("width", xScale.bandwidth())
+    .attr("height", (d) => inneHeight - yScale(d.total))
+    .attr("transform", `translate(${0}, ${0})`);
 }
