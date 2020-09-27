@@ -51,8 +51,8 @@ csv(require("../data/netflix_titles.csv")).then((data) => {
   renderMesuare(ratings);
   ratings = mesuareRatings(allRatings, data);
 
-  lineChart(block1, {variable: "rating", incomingData: ratings});
-  lineChart(block3, { variable: "sigla", incomingData: countries })
+  lineChart(block1, { variable: "rating", incomingData: ratings });
+  lineChart(block3, { variable: "sigla", incomingData: countries });
   // lineChart2(block3, countries);
   histoChart(block2, data);
 });
@@ -114,7 +114,10 @@ function lineChart(svg, props) {
   let xValue = (d) => xScale(d[variable]);
   let yValue = (d) => yScale(d.total);
 
-  let xScale = scaleBand().domain(variables).range([0, innerWidth]).paddingInner(1);
+  let xScale = scaleBand()
+    .domain(variables)
+    .range([0, innerWidth])
+    .paddingInner(1);
   let yScale = scaleLinear()
     .domain([0, max(incomingData, (d) => d.total + 1000)])
     .range([inneHeight, 0]);
@@ -125,155 +128,42 @@ function lineChart(svg, props) {
   let lineGenarator = line().x(xValue).y(yValue);
 
   let gGroup = svg
-  .append("g")
-  .attr("class", "gGroup")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .append("g")
+    .attr("class", "gGroup")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-let xAxisG = gGroup
-  .append("g")
-  .attr("class", "xAxis")
-  .attr("transform", `translate(${0}, ${inneHeight})`)
-  .call(xAxis);
+  let xAxisG = gGroup
+    .append("g")
+    .attr("class", "xAxis")
+    .attr("transform", `translate(${0}, ${inneHeight})`)
+    .call(xAxis);
 
-let yAxisG = gGroup
-  .append("g")
-  .attr("class", "yAxis")
-  .attr("transform", `translate(${0}, 0)`)
-  .call(yAxis);
+  let yAxisG = gGroup
+    .append("g")
+    .attr("class", "yAxis")
+    .attr("transform", `translate(${0}, 0)`)
+    .call(yAxis);
 
-xAxisG
-  .selectAll("text")
-  .attr("transform", `rotate(45)`)
-  .attr("text-anchor", "start")
-  .style("font-size", "0.6rem");
+  xAxisG
+    .selectAll("text")
+    .attr("transform", `rotate(45)`)
+    .attr("text-anchor", "start")
+    .style("font-size", "0.6rem");
 
-gGroup
-  .selectAll("circle")
-  .data(incomingData)
-  .enter()
-  .append("circle")
-  .attr("r", 4)
-  .attr("cx", xValue)
-  .attr("cy", yValue);
+  gGroup
+    .selectAll("circle")
+    .data(incomingData)
+    .enter()
+    .append("circle")
+    .attr("r", 4)
+    .attr("cx", xValue)
+    .attr("cy", yValue);
 
-gGroup
-  .append("path")
-  .attr("class", "line-ratings")
-  .attr("d", lineGenarator(incomingData));
-
+  gGroup
+    .append("path")
+    .attr("class", "line-ratings")
+    .attr("d", lineGenarator(incomingData));
 }
-
-// function lineChart(svg, incomingData) {
-//   const innerWidth = width - margin.left - margin.right;
-//   const inneHeight = height - margin.top - margin.bottom;
-//   let names = incomingData.map((d) => d.rating);
-
-//   let xValue = (d) => xScale(d.rating);
-//   let yValue = (d) => yScale(d.total);
-
-//   let xScale = scaleBand().domain(names).range([0, innerWidth]).paddingInner(1);
-
-//   let yScale = scaleLinear()
-//     .domain([0, max(incomingData, (d) => d.total)])
-//     .range([inneHeight, 0]);
-
-//   let xAxis = axisBottom(xScale).tickSize(-inneHeight).tickPadding(9);
-//   let yAxis = axisLeft(yScale).tickSize(0).tickPadding(10);
-
-//   let lineGenarator = line().x(xValue).y(yValue);
-
-//   let gGroup = svg
-//     .append("g")
-//     .attr("class", "gGroup")
-//     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-//   let xAxisG = gGroup
-//     .append("g")
-//     .attr("class", "xAxis")
-//     .attr("transform", `translate(${0}, ${inneHeight})`)
-//     .call(xAxis);
-
-//   let yAxisG = gGroup
-//     .append("g")
-//     .attr("class", "yAxis")
-//     .attr("transform", `translate(${0}, 0)`)
-//     .call(yAxis);
-
-//   xAxisG
-//     .selectAll("text")
-//     .attr("transform", `rotate(45)`)
-//     .attr("text-anchor", "start")
-//     .style("font-size", "0.6rem");
-
-//   gGroup
-//     .selectAll("circle")
-//     .data(incomingData)
-//     .enter()
-//     .append("circle")
-//     .attr("r", 4)
-//     .attr("cx", xValue)
-//     .attr("cy", yValue);
-
-//   gGroup
-//     .append("path")
-//     .attr("class", "line-ratings")
-//     .attr("d", lineGenarator(incomingData));
-// }
-
-// function lineChart2(svg, incomingData) {
-//   const innerWidth = width - margin.left - margin.right;
-//   const inneHeight = height - margin.top - margin.bottom;
-//   let siglas = incomingData.map((d) => d.sigla);
-
-//   let xValue = (d) => xScale(d.sigla);
-//   let yValue = (d) => yScale(d.total);
-
-//   let xScale = scaleBand()
-//     .domain(siglas)
-//     .range([0, innerWidth])
-//     .paddingInner(1);
-
-//   let yScale = scaleLinear()
-//     .domain([0, max(incomingData, (d) => d.total + 1000)])
-//     .range([inneHeight, 0])
-//     .nice();
-
-//   let xAxis = axisBottom(xScale).tickSize(-inneHeight).tickPadding(9);
-//   let yAxis = axisLeft(yScale).tickSize(-innerWidth).ticks(6).tickPadding(10);
-
-//   let lineGenarator = line().x(xValue).y(yValue);
-
-//   let gGroup = svg
-//     .append("g")
-//     .attr("class", "gGroup")
-//     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-//   let xAxisG = gGroup
-//     .append("g")
-//     .attr("class", "xAxis")
-//     .attr("transform", `translate(${0}, ${inneHeight})`)
-//     .call(xAxis);
-
-//   let yAxisG = gGroup
-//     .append("g")
-//     .attr("class", "yAxis")
-//     .attr("transform", `translate(${0}, 0)`)
-//     .call(yAxis);
-
-//   gGroup
-//     .selectAll("circle")
-//     .data(incomingData)
-//     .enter()
-//     .append("circle")
-//     .attr("r", 4)
-//     .attr("cx", xValue)
-//     .attr("cy", yValue);
-
-//   gGroup
-//     .append("path")
-//     .attr("class", "line-ratings")
-//     .attr("d", lineGenarator(incomingData));
-// }
 
 function histoChart(svg, incomingData) {
   const innerWidth = width - margin.left - margin.right;
