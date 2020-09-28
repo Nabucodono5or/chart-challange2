@@ -3,6 +3,7 @@ import { csv } from "d3-fetch";
 import { histogram, extent } from "d3-array";
 import { scaleBand, scaleLinear, max, axisBottom, axisLeft } from "d3";
 import { line } from "d3-shape";
+import { histoChart } from "./histogram";
 
 // selectAll(".icon-container").append("svg").attr("width", 50).attr("height", 60);
 let width = 240;
@@ -53,8 +54,7 @@ csv(require("../data/netflix_titles.csv")).then((data) => {
 
   lineChart(block1, { variable: "rating", incomingData: ratings });
   lineChart(block3, { variable: "sigla", incomingData: countries });
-  // lineChart2(block3, countries);
-  histoChart(block2, data);
+  histoChart(block2, { width, height, margin, incomingData: data });
 });
 
 function mesuareYearsRelease(incomingData) {
@@ -163,62 +163,4 @@ function lineChart(svg, props) {
     .append("path")
     .attr("class", "line-ratings")
     .attr("d", lineGenarator(incomingData));
-}
-
-function histoChart(svg, incomingData) {
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
-
-  let xValue = (d) => xScale(d.release_year);
-  let xPosition = (d) => xScale(d.x0);
-  let yValue = (d) => yScale(d.length);
-
-  let xScale = scaleLinear()
-    .domain(extent(incomingData, (d) => d.release_year))
-    .range([0, innerWidth]);
-
-  let h = histogram().value((d) => {
-    return d.release_year;
-  });
-
-  let bins = h(incomingData);
-  let maxBin = max(bins, (d) => d.length);
-
-  let yScale = scaleLinear()
-    .domain([maxBin + 500, 2000, 500, 0])
-    .range([0, 50, 100, innerHeight]);
-
-  console.log(yScale.range());
-
-  let xAxis = axisBottom(xScale).ticks(5).tickSize(-innerHeight).tickPadding(9);
-  let yAxis = axisLeft(yScale).tickValues([maxBin, 2000, 1000, 300, 0]);
-
-  let gGroup = svg
-    .append("g")
-    .attr("class", "gGroup")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-  let xAxisG = gGroup
-    .append("g")
-    .attr("class", "xAxis")
-    .attr("transform", `translate(${0}, ${innerHeight})`)
-    .call(xAxis);
-
-  let yAxisG = gGroup
-    .append("g")
-    .attr("class", "yAxis")
-    .attr("transform", `translate(${0}, 0)`)
-    .call(yAxis);
-
-  gGroup
-    .selectAll("rect")
-    .data(bins)
-    .enter()
-    .append("rect")
-    .attr("class", "bar-graph")
-    .attr("x", xPosition)
-    .attr("y", yValue)
-    .attr("width", 10)
-    .attr("height", (d) => innerHeight - yScale(d.length));
-  // .attr("height", (d) => innerHeight - yScale(d.length));
 }
