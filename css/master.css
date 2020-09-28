@@ -208,9 +208,33 @@ hr {
 }
 
 .line-ratings {
-  stroke-width: 1px;
+  stroke-width: 3.5px;
   stroke: #fff;
   fill: none;
+}
+
+.points {
+  fill: var(--card-color);
+}
+
+.yAxis, .xAxis {
+  color: var(--background-color);
+  font-size: 0.75rem;
+}
+
+.yAxis line, .xAxis line {
+  opacity: 0.3;
+}
+
+.yAxis .domain, .xAxis .domain{
+  opacity: 0.3;
+}
+
+.bar-graph {
+  stroke: var(--card-color);
+  fill: var(--background-color);
+  opacity: 0.7;
+  stroke-width: 0.13rem;
 }
 
 @media (max-width: 1000px) {

@@ -73,9 +73,10 @@ export function lineChart(svg, props) {
     .data(incomingData)
     .enter()
     .append("circle")
-    .attr("r", 4)
+    .attr("r", 5)
     .attr("cx", xValue)
-    .attr("cy", yValue);
+    .attr("cy", yValue)
+    .attr("class", "points");
 
   gGroup
     .append("path")

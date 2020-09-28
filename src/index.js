@@ -32,7 +32,7 @@ const countriesHighlight = [
   { name: "Brazil", sigla: "BRA", total: 0 },
 ];
 
-const margin = { top: 30, left: 40, right: 30, bottom: 30 };
+const margin = { top: 30, left: 45, right: 30, bottom: 30 };
 
 selectAll(".chart-block")
   .append("svg")
